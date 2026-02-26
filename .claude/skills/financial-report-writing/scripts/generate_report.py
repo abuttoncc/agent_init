@@ -21,6 +21,7 @@ Usage:
     )
 """
 
+import csv
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -173,6 +174,41 @@ class ReportGenerator:
             "本报告仅供参考，不构成任何投资建议或承诺，投资者应审慎决策，独立判断，"
             "自行承担投资风险。"
         )
+
+    @staticmethod
+    def write_data_sources(
+        records: List[Dict],
+        output_path: str,
+    ) -> str:
+        """
+        生成数据溯源附件（CSV），记录报告中每个数据点的来源。
+
+        Args:
+            records: 数据溯源记录列表，每条记录是一个 dict：
+                - section: str — 所属章节，如"核心提要"
+                - data_item: str — 数据项名称，如"营业收入"
+                - value: str — 数据值，如"1309亿元"
+                - source: str — 数据来源工具/接口，如"mcp__ts-data__get_stock_data"
+                - params: str — 调用参数，如"ts_code=600519.SH"
+                - field: str — 返回字段路径，如"financial_data.income_core.total_revenue"
+                - timestamp: str — 数据获取时间（可选）
+            output_path: 输出CSV文件路径
+
+        Returns:
+            保存的文件路径
+        """
+        fieldnames = [
+            "section", "data_item", "value",
+            "source", "params", "field", "timestamp",
+        ]
+
+        with open(output_path, "w", newline="", encoding="utf-8-sig") as f:
+            writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
+            writer.writeheader()
+            for rec in records:
+                writer.writerow(rec)
+
+        return output_path
 
 
 if __name__ == "__main__":

@@ -88,7 +88,45 @@ gen.generate_report(
 | `table` | dict | 三线表，含 `headers` 和 `rows` |
 | `bullets` | List[str] | 项目符号列表 |
 
-### 2. GBT9704Formatter — 底层格式化器
+### 2. 数据溯源附件 — CSV
+
+生成报告时，同步输出一份 CSV 记录每个数据点的来源，便于审计和复查。
+
+```python
+from generate_report import ReportGenerator
+
+records = [
+    {
+        "section": "核心提要",
+        "data_item": "营业收入",
+        "value": "1309亿元",
+        "source": "mcp__ts-data__get_income_statement",
+        "params": "ts_code=600519.SH, period=20250930",
+        "field": "total_revenue",
+        "timestamp": "2026-02-26T21:50:00",
+    },
+    # ... 更多记录
+]
+
+ReportGenerator.write_data_sources(
+    records,
+    output_path="tmp/session/output/data_sources.csv",
+)
+```
+
+#### CSV 字段说明
+
+| 字段 | 说明 | 示例 |
+|------|------|------|
+| `section` | 所属章节 | 核心提要 |
+| `data_item` | 数据项名称 | 营业收入 |
+| `value` | 报告中使用的值 | 1309亿元 |
+| `source` | 数据来源工具 | mcp__ts-data__get_income_statement |
+| `params` | 调用参数 | ts_code=600519.SH, period=20250930 |
+| `field` | 返回字段路径 | total_revenue |
+| `timestamp` | 数据获取时间（可选） | 2026-02-26T21:50:00 |
+
+### 3. GBT9704Formatter — 底层格式化器
 
 如需更精细的控制，直接使用格式化器：
 
@@ -112,7 +150,7 @@ fmt.add_page_number_footer()
 doc.save("output.docx")
 ```
 
-### 3. chart_utils — Excel 图表生成
+### 4. chart_utils — Excel 图表生成
 
 ```python
 from chart_utils import create_research_chart, create_price_volume_chart
