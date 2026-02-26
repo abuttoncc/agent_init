@@ -7,7 +7,7 @@
 ```
 公式: (营业收入 - 营业成本) / 营业收入 × 100%
 
-数据来源: get_financial_indicator → grossprofit_margin
+字段名: grossprofit_margin
 ```
 
 **解读框架**:
@@ -29,7 +29,7 @@
 ```
 公式: 净利润 / 营业收入 × 100%
 
-数据来源: get_financial_indicator → netprofit_margin
+字段名: netprofit_margin
 ```
 
 **解读框架**:
@@ -46,7 +46,7 @@
 ```
 公式: 净利润 / 净资产 × 100%
 
-数据来源: get_financial_indicator → roe
+字段名: roe
 
 杜邦分解:
 ROE = 净利率 × 资产周转率 × 权益乘数
@@ -75,7 +75,7 @@ ROE = 净利率 × 资产周转率 × 权益乘数
 ```
 公式: 净利润 / 总资产 × 100%
 
-数据来源: get_financial_indicator → roa
+字段名: roa
 ```
 
 **解读**:
@@ -122,7 +122,7 @@ ROE = 净利率 × 资产周转率 × 权益乘数
 ```
 公式: 总负债 / 总资产 × 100%
 
-数据来源: get_financial_indicator → debt_to_assets
+字段名: debt_to_assets
 ```
 
 **行业差异**:
@@ -139,7 +139,7 @@ ROE = 净利率 × 资产周转率 × 权益乘数
 ```
 公式: 流动资产 / 流动负债
 
-数据来源: get_financial_indicator → current_ratio
+字段名: current_ratio
 
 解读:
 - >2: 流动性充足
@@ -153,7 +153,7 @@ ROE = 净利率 × 资产周转率 × 权益乘数
 ```
 公式: (流动资产 - 存货) / 流动负债
 
-数据来源: get_financial_indicator → quick_ratio
+字段名: quick_ratio
 
 解读:
 - >1: 短期偿债能力强
@@ -212,7 +212,7 @@ ROE = 净利率 × 资产周转率 × 权益乘数
 ```
 公式: (期末收入/期初收入)^(1/年数) - 1
 
-数据来源: get_financial_metrics → metrics: ["revenue"], calc_type: "cagr"
+计算方式: (期末收入/期初收入)^(1/年数) - 1
 ```
 
 **解读**:
@@ -226,7 +226,7 @@ ROE = 净利率 × 资产周转率 × 权益乘数
 ```
 公式: (期末净利润/期初净利润)^(1/年数) - 1
 
-数据来源: get_financial_metrics → metrics: ["profit"], calc_type: "cagr"
+计算方式: (期末净利润/期初净利润)^(1/年数) - 1
 ```
 
 **与营收增速对比**:
@@ -269,60 +269,7 @@ ROE = 净利率 × 资产周转率 × 权益乘数
 - PEG > 1: 可能高估
 ```
 
-## 七、tushare-data 工具使用指南
-
-### 获取单期财务指标
-
-```python
-# 使用 get_financial_indicator
-# 返回: roe, roa, grossprofit_margin, netprofit_margin,
-#       debt_to_assets, current_ratio, quick_ratio, eps, bps
-
-result = get_financial_indicator(stock_code="600519", period="20231231")
-```
-
-### 获取利润表数据
-
-```python
-# 使用 get_income_statement
-# 返回: total_revenue, revenue, operate_profit, n_income
-
-result = get_income_statement(stock_code="600519", period="20231231")
-```
-
-### 获取资产负债表
-
-```python
-# 使用 get_balance_sheet
-# 返回: total_assets, total_liab, total_hldr_eqy_exc_min_int
-
-result = get_balance_sheet(stock_code="600519", period="20231231")
-```
-
-### 获取现金流量表
-
-```python
-# 使用 get_cashflow_statement
-# 返回: n_cashflow_act, n_cashflow_inv_act, n_cash_flows_fnc_act
-
-result = get_cashflow_statement(stock_code="600519", period="20231231")
-```
-
-### 获取增长分析
-
-```python
-# 使用 get_financial_metrics
-# calc_type: raw (原始值), yoy (同比), cagr (复合增长率)
-
-result = get_financial_metrics(
-    stock_code="600519",
-    metrics=["revenue", "profit", "roe"],
-    period="3y",
-    calc_type="cagr"
-)
-```
-
-## 八、财务数据质量检查
+## 七、财务数据质量检查
 
 ### 检查清单
 
