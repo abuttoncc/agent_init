@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "deny": [
+      "Bash(command:/home/core/dev/[!j]*)",
+      "Bash(command:cd /home/core/dev/[!j]*)",
+      "Bash(command:*../.*)"
+    ]
+  }
+}
