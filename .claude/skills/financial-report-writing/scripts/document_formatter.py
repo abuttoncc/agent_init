@@ -53,7 +53,7 @@ class GBT9704Formatter:
             font_name: 字体名称（中文字体）
             size: 字号（磅值），如 16, 14, 12
             bold: 是否加粗
-            color: 字体颜色
+            color: 字体颜色，默认黑色
         """
         run.font.name = font_name
         run._element.rPr.rFonts.set(qn('w:eastAsia'), font_name)
@@ -62,8 +62,8 @@ class GBT9704Formatter:
             run.font.size = Pt(size)
         if bold is not None:
             run.font.bold = bold
-        if color is not None:
-            run.font.color.rgb = color
+        # 默认黑色，确保标题等不会继承 Word 内建样式颜色
+        run.font.color.rgb = color if color is not None else RGBColor(0, 0, 0)
 
     def add_heading(self, text: str, level: int = 1, font_name: str = '黑体', size: int = 16):
         """
@@ -83,8 +83,9 @@ class GBT9704Formatter:
             run = heading.runs[0]
             self.set_font(run, font_name, size, bold=True)
             heading.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-            heading.paragraph_format.space_before = Pt(0)
-            heading.paragraph_format.space_after = Pt(0)
+            heading.paragraph_format.line_spacing_rule = WD_LINE_SPACING.ONE_POINT_FIVE
+            heading.paragraph_format.space_before = Pt(12)
+            heading.paragraph_format.space_after = Pt(12)
             return heading
         else:
             # 二级、三级标题使用"一、"、"(一)"等格式
@@ -97,10 +98,9 @@ class GBT9704Formatter:
 
             # 段落格式
             paragraph.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-            paragraph.paragraph_format.space_before = Pt(0)
-            paragraph.paragraph_format.space_after = Pt(0)
-            paragraph.paragraph_format.line_spacing = Pt(25)
-            paragraph.paragraph_format.line_spacing_rule = WD_LINE_SPACING.EXACTLY
+            paragraph.paragraph_format.line_spacing_rule = WD_LINE_SPACING.ONE_POINT_FIVE
+            paragraph.paragraph_format.space_before = Pt(12)
+            paragraph.paragraph_format.space_after = Pt(12)
 
             return paragraph
 
@@ -139,13 +139,12 @@ class GBT9704Formatter:
             # 首行缩进2字符（28pt）
             paragraph.paragraph_format.first_line_indent = Pt(28)
 
-        # 行距固定值28pt
-        paragraph.paragraph_format.line_spacing = Pt(28)
-        paragraph.paragraph_format.line_spacing_rule = WD_LINE_SPACING.EXACTLY
+        # 1.5倍行距
+        paragraph.paragraph_format.line_spacing_rule = WD_LINE_SPACING.ONE_POINT_FIVE
 
-        # 段前段后距为0
+        # 段间距1行
         paragraph.paragraph_format.space_before = Pt(0)
-        paragraph.paragraph_format.space_after = Pt(0)
+        paragraph.paragraph_format.space_after = Pt(12)
 
         return paragraph
 
@@ -162,10 +161,9 @@ class GBT9704Formatter:
             paragraph = self.doc.add_paragraph(item, style='List Bullet')
             run = paragraph.runs[0]
             self.set_font(run, font_name, size)
-            paragraph.paragraph_format.line_spacing = Pt(28)
-            paragraph.paragraph_format.line_spacing_rule = WD_LINE_SPACING.EXACTLY
+            paragraph.paragraph_format.line_spacing_rule = WD_LINE_SPACING.ONE_POINT_FIVE
             paragraph.paragraph_format.space_before = Pt(0)
-            paragraph.paragraph_format.space_after = Pt(0)
+            paragraph.paragraph_format.space_after = Pt(12)
 
     def add_three_line_table(self, data: List[List[str]],
                             headers: List[str],

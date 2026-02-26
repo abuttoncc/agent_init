@@ -53,8 +53,8 @@ class ReportGenerator:
         sections: List[Dict],
         organization: str = "",
         date_str: str = None,
-        include_cover: bool = True,
-        include_disclaimer: bool = True,
+        include_cover: bool = False,
+        include_disclaimer: bool = False,
         data_source: str = "Tushare",
         output_path: str = None,
     ) -> str:
@@ -134,11 +134,11 @@ class ReportGenerator:
                 p = self.doc.add_paragraph()
                 run = p.add_run(f"{i}. {point}")
                 self.formatter.set_font(run, "仿宋", 14)
-                p.paragraph_format.line_spacing = Pt(28)
-                p.paragraph_format.line_spacing_rule = 2
+                from docx.enum.text import WD_LINE_SPACING
+                p.paragraph_format.line_spacing_rule = WD_LINE_SPACING.ONE_POINT_FIVE
                 p.paragraph_format.first_line_indent = Pt(28)
                 p.paragraph_format.space_before = Pt(0)
-                p.paragraph_format.space_after = Pt(0)
+                p.paragraph_format.space_after = Pt(12)
 
         # 正文段落
         if "paragraphs" in section:
@@ -161,8 +161,8 @@ class ReportGenerator:
                 p = self.doc.add_paragraph()
                 run = p.add_run(f"• {item}")
                 self.formatter.set_font(run, "仿宋", 14)
-                p.paragraph_format.line_spacing = Pt(28)
-                p.paragraph_format.line_spacing_rule = 2
+                from docx.enum.text import WD_LINE_SPACING
+                p.paragraph_format.line_spacing_rule = WD_LINE_SPACING.ONE_POINT_FIVE
                 p.paragraph_format.first_line_indent = Pt(28)
 
     def _add_disclaimer(self):
